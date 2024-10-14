@@ -16,7 +16,20 @@
             "path" : "pages/my/my",
             "style" : {}
         }
-    ],
+  ],
+  "subPackages": [
+    {
+      "root": "subpkg",
+      "pages": [{
+                  "path" : "goods_detail/goods_detail",
+                  "style" : {}
+                }    ,{
+                    "path" : "goods_list/goods_list",
+                    "style" : {}
+                }
+            ]
+    }
+  ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "商品优购",
