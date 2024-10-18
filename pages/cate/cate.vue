@@ -1,5 +1,11 @@
 <template>
   <view>
+    
+    <!-- 使用自定义的搜索组件 -->
+    <!-- <my-search :bgcolor="'pink'" :radius="3"></my-search> -->
+    
+    <my-search @click="gotoSearch"></my-search>
+    
     <view class="scroll-view-container">
       <!-- 左侧的滚动视图区域 -->
       <scroll-view class="left-scroll-view" scroll-y="true" :style="{height: wh + 'px'}">
@@ -48,7 +54,7 @@
       // 获取当前系统的信息
       const sysInfo = uni.getSystemInfoSync()
       // 为 wh 窗口可用高度动态赋值
-      this.wh = sysInfo.windowHeight
+      this.wh = sysInfo.windowHeight - 50
       // 调用获取分类数据的方法
       this.getCateList()
     },
@@ -77,6 +83,13 @@
       gotoGoodsList(item3) {
         uni.navigateTo({
           url: '/subpkg/goods_list/goods_list?cid=' + item3.cat_id
+        })
+      },
+      // 子组件里的自定义组件的绑定事件处理函数
+      gotoSearch(){
+        console.log("子组件cate里的自定义组件的绑定事件处理函数gotoSearch--->OK")
+        uni.navigateTo({
+          url: '/subpkg/search/search'
         })
       }
       
@@ -147,5 +160,13 @@
   }
 }
 
+// .search-box1 {
+//   // 设置定位效果为“吸顶”
+//   position: sticky;
+//   // 吸顶的“位置”
+//   top: 0;
+//   // 提高层级，防止被轮播图覆盖
+//   z-index: 999;
+// }
 
 </style>
