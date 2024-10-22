@@ -35,67 +35,66 @@
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        // 窗口的可用高度 = 屏幕高度 - navigationBar高度 - tabBar 高度
-        wh: 0,
-        // 分类数据列表
-        cateList: [],
-        // 当前选中项的索引，默认让第一项被选中
-        active: 0,
-        // 二级分类列表
-        cateLevel2: [],
-        // 定义滚动条距离顶部的距离
-        scrollTop: 0
-      };
+// 导入自己封装的 mixin 模块
+import badgeMix from '@/mixins/tabbar-badge.js'
+export default {
+  mixins: [badgeMix],
+  data() {
+    return {
+      // 窗口的可用高度 = 屏幕高度 - navigationBar高度 - tabBar 高度
+      wh: 0,
+      // 分类数据列表
+      cateList: [],
+      // 当前选中项的索引，默认让第一项被选中
+      active: 0,
+      // 二级分类列表
+      cateLevel2: [],
+      // 定义滚动条距离顶部的距离
+      scrollTop: 0
+    };
+  },
+  onLoad() {
+    // 获取当前系统的信息
+    const sysInfo = uni.getSystemInfoSync()
+    // 为 wh 窗口可用高度动态赋值
+    this.wh = sysInfo.windowHeight - 50
+    // 调用获取分类数据的方法
+    this.getCateList()
+  },
+  methods: {
+    async getCateList() {
+      // 发起请求
+     const {data: res} = await uni.$http.get('api/public/v1/categories')
+     // 判断是否请求成功，请求失败
+     if(res.meta.status !== 200) return uni.$showMsg()
+     // 请求成功，将请求成功获取到的数据更新到data空数组中
+     this.cateList = res.message  
+     // 为二级分类列表赋值
+     this.cateLevel2 = res.message[0].children   
     },
-    onLoad() {
-      // 获取当前系统的信息
-      const sysInfo = uni.getSystemInfoSync()
-      // 为 wh 窗口可用高度动态赋值
-      this.wh = sysInfo.windowHeight - 50
-      // 调用获取分类数据的方法
-      this.getCateList()
+    activeChanged(i) {
+      this.active = i
+      // 为二级分类列表重新赋值
+      this.cateLevel2 = this.cateList[i].children
+      // 让scrollTop的值在0与1之间切换,滚动条重置
+      this.scrollTop = this.scrollTop === 0 ? 1 : 0
+      // this.scrollTop = 0  
     },
-    methods: {
-      async getCateList() {
-        // 发起请求
-       const {data: res} = await uni.$http.get('api/public/v1/categories')
-       // 判断是否请求成功，请求失败
-       if(res.meta.status !== 200) return uni.$showMsg()
-       // 请求成功，将请求成功获取到的数据更新到data空数组中
-       this.cateList = res.message  
-       // 为二级分类列表赋值
-       this.cateLevel2 = res.message[0].children
-       
-      },
-      activeChanged(i) {
-        this.active = i
-        // 为二级分类列表重新赋值
-        this.cateLevel2 = this.cateList[i].children
-        // 让scrollTop的值在0与1之间切换,滚动条重置
-        this.scrollTop = this.scrollTop === 0 ? 1 : 0
-        // this.scrollTop = 0
-        
-      },
-      // 点击三级分类项跳转到商品列表页面
-      gotoGoodsList(item3) {
-        uni.navigateTo({
-          url: '/subpkg/goods_list/goods_list?cid=' + item3.cat_id
-        })
-      },
-      // 子组件里的自定义组件的绑定事件处理函数
-      gotoSearch(){
-        console.log("子组件cate里的自定义组件的绑定事件处理函数gotoSearch--->OK")
-        uni.navigateTo({
-          url: '/subpkg/search/search'
-        })
-      }
-      
-    }
- 
+    // 点击三级分类项跳转到商品列表页面
+    gotoGoodsList(item3) {
+      uni.navigateTo({
+        url: '/subpkg/goods_list/goods_list?cid=' + item3.cat_id
+      })
+    },
+    // 子组件里的自定义组件的绑定事件处理函数
+    gotoSearch(){
+      console.log("子组件cate里的自定义组件的绑定事件处理函数gotoSearch--->OK")
+      uni.navigateTo({
+        url: '/subpkg/search/search'
+      })
+    }      
   }
+}
 </script>
 
 <style lang="scss">

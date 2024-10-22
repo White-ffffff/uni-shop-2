@@ -45,73 +45,71 @@
   </view>
 </template>
 <script>
-	export default {
-		data() {
-			return {
-        // 1. 轮播图的数据列表，默认为空数组
-        swiperList: [],
-        // 1. 分类导航的数据列表
-        navList: [],
-        // 1. 楼层的数据列表
-        floorList: []
-			};
-		},
-    onLoad() {
-        // 2. 在小程序页面刚加载的时候，调用获取轮播图数据的方法
-        this.getSwiperList()
-        // 2. 在 onLoad 中调用获取数据的方法
-        this.getNavList()
-        // 2. 在 onLoad 中调用获取楼层数据的方法
-        this.getFloorList()
-    },
-    methods: {
-        // 3. 获取轮播图数据的方法
-        async getSwiperList() {
-          const { data: res } = await uni.$http.get('api/public/v1/home/swiperdata')
-             if (res.meta.status !== 200) return uni.$showMsg()
-             this.swiperList = res.message
-        },
-        // 3. 在 methods 中定义获取数据的方法
-        async getNavList() {
-          const { data: res } = await uni.$http.get('api/public/v1/home/catitems')
-            if (res.meta.status !== 200) return uni.$showMsg()
-            this.navList = res.message
-        },
-        // nav-item 项被点击时候的事件处理函数
-        navClickHandler(item) {
-          // 判断点击的是哪个 nav
-          if (item.name === '分类') {
-            uni.switchTab({
-              url: '/pages/cate/cate'
-            })
-          }
-        },
-        
-        // 3. 定义获取楼层列表数据的方法
-      async getFloorList() {
-        const { data: res } = await uni.$http.get('api/public/v1/home/floordata')
-        if (res.meta.status !== 200) return uni.$showMsg()
-      
-        // 通过双层 forEach 循环，处理 URL 地址
-        res.message.forEach(floor => {
-          floor.product_list.forEach(prod => {
-            prod.url = '/subpkg/goods_list/goods_list?' + prod.navigator_url.split('?')[1]
-          })
-        })
-      
-        this.floorList = res.message
+// 导入自己封装的 mixin 模块
+import badgeMix from '@/mixins/tabbar-badge.js'
+export default {
+  mixins: [badgeMix],
+	data() {
+		return {
+      // 1. 轮播图的数据列表，默认为空数组
+      swiperList: [],
+      // 1. 分类导航的数据列表
+      navList: [],
+      // 1. 楼层的数据列表
+      floorList: []
+	};
+	},
+  onLoad() {
+      // 2. 在小程序页面刚加载的时候，调用获取轮播图数据的方法
+      this.getSwiperList()
+      // 2. 在 onLoad 中调用获取数据的方法
+      this.getNavList()
+      // 2. 在 onLoad 中调用获取楼层数据的方法
+      this.getFloorList()
+  },
+  methods: {
+      // 3. 获取轮播图数据的方法
+      async getSwiperList() {
+        const { data: res } = await uni.$http.get('api/public/v1/home/swiperdata')
+           if (res.meta.status !== 200) return uni.$showMsg()
+           this.swiperList = res.message
       },
-       gotoSearch(){
-         console.log("子组件home里的自定义组件的绑定事件处理函数gotoSearch--->OK")
-         uni.navigateTo({
-           url: '/subpkg/search/search'
-         })
-       }
-      
-    }
-    
-    
-	}
+      // 3. 在 methods 中定义获取数据的方法
+      async getNavList() {
+        const { data: res } = await uni.$http.get('api/public/v1/home/catitems')
+          if (res.meta.status !== 200) return uni.$showMsg()
+          this.navList = res.message
+      },
+      // nav-item 项被点击时候的事件处理函数
+      navClickHandler(item) {
+        // 判断点击的是哪个 nav
+        if (item.name === '分类') {
+          uni.switchTab({
+            url: '/pages/cate/cate'
+          })
+        }
+      },
+        
+      // 3. 定义获取楼层列表数据的方法
+    async getFloorList() {
+      const { data: res } = await uni.$http.get('api/public/v1/home/floordata')
+      if (res.meta.status !== 200) return uni.$showMsg()  
+      // 通过双层 forEach 循环，处理 URL 地址
+      res.message.forEach(floor => {
+        floor.product_list.forEach(prod => {
+          prod.url = '/subpkg/goods_list/goods_list?' + prod.navigator_url.split('?')[1]
+        })
+      })
+      this.floorList = res.message
+    },
+     gotoSearch(){
+       console.log("子组件home里的自定义组件的绑定事件处理函数gotoSearch--->OK")
+       uni.navigateTo({
+         url: '/subpkg/search/search'
+       })
+     }      
+  }   
+}
 </script>
 
 <style lang="scss">
