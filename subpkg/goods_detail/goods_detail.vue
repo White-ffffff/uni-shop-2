@@ -45,10 +45,10 @@ export default {
       // 定义 total 监听器，指向一个配置对象
       total: {
         // handler 属性用来定义监听器的 function 处理函数
-        handler(newVal){
+        handler(newTotal){
           const findResult = this.options.find(x => x.text === '购物车')
           if (findResult) {
-            findResult.info = newVal
+            findResult.info = newTotal
           }
         },
         // immediate 属性用来声明此侦听器，是否在页面初次加载完毕后立即调用

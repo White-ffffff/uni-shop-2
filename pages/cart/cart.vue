@@ -1,29 +1,42 @@
 <template>
 	<view>
+    <!-- 收获地址组件 -->
+    <my-address></my-address>
 		<!-- 商品列表的标题区域 -->
     <view class="cart-title">
       <uni-icons type="shop" size="18"></uni-icons>
       <text class="cart-title-text">购物车</text>
     </view>
     
-    <!-- 循环渲染购物车里的商品信息 -->
-    <block v-for="(goods, i) in cart" :key="i">
-      <my-goods :goods="goods" :show-radio="true" @radio-change="radioChangeHandler"></my-goods>
-    </block>
     
+    <!-- 商品列表区域 -->
+    <!-- uni-swipe-action 是最外层包裹性质的容器 -->
+    <uni-swipe-action>
+      <block v-for="(goods, i) in cart" :key="i">
+        <!-- uni-swipe-action-item 可以为其子节点提供滑动操作的效果。需要通过 options 属性来指定操作按钮的配置信息 -->
+        <uni-swipe-action-item :options="options" @click="swipeActionClickHandler(goods)">
+          <my-goods :goods="goods" :show-radio="true" :show-num="true" @radio-change="radioChangeHandler" @num-change="numberChangeHandler"></my-goods>
+        </uni-swipe-action-item>
+      </block>
+    </uni-swipe-action>
 	</view>
 </template>
 
 <script>
 // 按需导入 mapGetters 这个辅助方法
 import { mapGetters } from 'vuex'
-
+import badgeMix from '@/mixins/tabbar-badge.js'
 import { mapState, mapMutations } from 'vuex'
 
 export default {
 	data() {
 		return {
-			
+			options: [{
+			  text: '删除', // 显示的文本内容
+			  style: {
+			    backgroundColor: '#C00000' // 按钮的背景颜色
+			  }
+			}]
 		}
 	},
   computed: {
@@ -44,11 +57,25 @@ export default {
         text: this.total + ''
       })
     },
-    ...mapMutations('m_cart',['updateGoodsState']),
+    ...mapMutations('m_cart',['updateGoodsState','updateGoodsCount','removeGoodsById']),
     //商品的勾选状态发生变化
     radioChangeHandler(e){
       this.updateGoodsState(e)
       console.log(e)
+    },
+    // 商品的数量发生了变化
+    numberChangeHandler(e){
+      this.updateGoodsCount(e)
+      console.log(e)
+    },
+    // 点击了滑动操作按钮
+    swipeActionClickHandler(goods) {
+      console.log(goods)
+    },
+    // 点击滑动删除按钮
+    swipeActionClickHandler(goods) {
+      this.removeGoodsById(goods.goods_id)
+      console.log(goods)
     }
   }
 }

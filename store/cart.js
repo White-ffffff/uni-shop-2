@@ -33,7 +33,21 @@ export default {
         findResult.goods_state = goods.goods_state
         this.commit('m_cart/saveToStorage')
       }
+    },
+    // 更新购物车中商品的数量状态
+    updateGoodsCount(state,goods){
+      const findResult = state.cart.find(x => x.goods_id === goods.goods_id)
+      if (findResult) {
+        findResult.goods_count = goods.goods_count
+        this.commit('m_cart/saveToStorage')
+      }
+    },
+    // 实现滑动删除的功能,根据 Id 从购物车中删除对应的商品信息
+    removeGoodsById(state,goods_id){
+      state.cart = state.cart.filter(x => x.goods_id !== goods_id)
+      this.commit('m_cart/saveToStorage')
     }
+    
   },
 
   // 模块的 getters 属性

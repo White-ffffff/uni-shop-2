@@ -12,6 +12,7 @@
 	    <view class="goods-info-box">
         <!-- 在渲染商品价格的时候，通过管道符 | 调用过滤器 -->
 	      <view class="goods-price">￥{{goods.goods_price | tofixed}}</view>
+        <uni-number-box :min="1" :value="goods.goods_count" v-if="showNum" @change="numChangeHandler"></uni-number-box>
 	    </view>
 	  </view>
 	</view>
@@ -34,7 +35,12 @@
       showRadio: {
         type: Boolean,
         default: false
-      }
+      },
+      // 是否展示右侧的NumberBox 组件
+      showNum: {
+        type: Boolean,
+        default: false
+      },
     },
     filters: {
       // 把数字处理为带两位小数点的数字
@@ -49,6 +55,14 @@
           goods_id: this.goods.goods_id,
           goods_state: !this.goods.goods_state
         })
+      },
+      // NumberBox 组件的 change 事件处理函数
+      numChangeHandler(val){
+        console.log(val)
+        this.$emit('num-change',{
+          goods_id: this.goods.goods_id,
+          goods_count: +val
+        })
       }
     }
 	}
@@ -56,9 +70,13 @@
 
 <style lang="scss">
 .goods-item {
-  display: flex;
-  padding: 10px 5px;
-  border-bottom: 1px solid #f0f0f0;
+  // 让 goods-item 项占满整个屏幕的宽度
+    width: 750rpx;
+    // 设置盒模型为 border-box
+    box-sizing: border-box;
+    display: flex;
+    padding: 10px 5px;
+    border-bottom: 1px solid #f0f0f0;
 
   .goods-item-left {
     margin-right: 5px;
@@ -72,13 +90,20 @@
 
   .goods-item-right {
     display: flex;
+    flex: 1;
     flex-direction: column;
     justify-content: space-between;
-
+  
     .goods-name {
       font-size: 13px;
     }
-
+  
+    .goods-info-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  
     .goods-price {
       font-size: 16px;
       color: #c00000;
