@@ -5,8 +5,6 @@
       <button type="primary" size="mini" class="btnChooseAddress" @click="chooseAddress">请选择收货地址+</button>
     </view>
     
-      <!-- 渲染收货信息的盒子 -->
-    <!-- 渲染收货信息的盒子 -->
     <!-- 渲染收货信息的盒子 -->
     <view class="address-info-box" v-else @click="chooseAddress">
       <view class="row1">

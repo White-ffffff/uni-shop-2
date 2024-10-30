@@ -3,7 +3,7 @@
 	  <!-- 左侧区域 -->
 	  <view class="goods-item-left">
       <radio :checked="goods.goods_state" color="#C00000" v-if="showRadio" @click="radioClickHandler"></radio>
-	    <image :src="goods.goods_small_logo || defaultPic" class="goods-pic"></image>
+	    <image :src="goods.goods_small_logo || defaultPic" class="goods-pic" @click="gotoDetail(goods)"></image>
 	  </view>
 	  <!-- 右侧区域 -->
 	  <view class="goods-item-right">
@@ -62,6 +62,13 @@
         this.$emit('num-change',{
           goods_id: this.goods.goods_id,
           goods_count: +val
+        })
+      },
+      // 点击跳转到商品详情页面
+      gotoDetail(goods) {
+        console.log("进入gotoDetail方法")
+        uni.navigateTo({
+          url: '/subpkg/goods_detail/goods_detail?goods_id=' + goods.goods_id,
         })
       }
     }

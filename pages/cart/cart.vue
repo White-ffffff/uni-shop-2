@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="cart-container" v-if="cart.length !== 0">
     <!-- 收获地址组件 -->
     <my-address></my-address>
 		<!-- 商品列表的标题区域 -->
@@ -7,7 +7,6 @@
       <uni-icons type="shop" size="18"></uni-icons>
       <text class="cart-title-text">购物车</text>
     </view>
-    
     
     <!-- 商品列表区域 -->
     <!-- uni-swipe-action 是最外层包裹性质的容器 -->
@@ -19,7 +18,14 @@
         </uni-swipe-action-item>
       </block>
     </uni-swipe-action>
+     <!-- 结算区域 -->
+    <my-settle></my-settle>
 	</view>
+   <!-- 空白购物车区域 -->
+  <view class="empty-cart" v-else>
+    <image src="/static/cart_empty@2x.png" class="empty-img"></image>
+    <text class="tip-text">空空如也~</text>
+  </view>
 </template>
 
 <script>
@@ -29,6 +35,7 @@ import badgeMix from '@/mixins/tabbar-badge.js'
 import { mapState, mapMutations } from 'vuex'
 
 export default {
+  mixins: [badgeMix],
 	data() {
 		return {
 			options: [{
@@ -36,7 +43,7 @@ export default {
 			  style: {
 			    backgroundColor: '#C00000' // 按钮的背景颜色
 			  }
-			}]
+			}],
 		}
 	},
   computed: {
@@ -68,10 +75,6 @@ export default {
       this.updateGoodsCount(e)
       console.log(e)
     },
-    // 点击了滑动操作按钮
-    swipeActionClickHandler(goods) {
-      console.log(goods)
-    },
     // 点击滑动删除按钮
     swipeActionClickHandler(goods) {
       this.removeGoodsById(goods.goods_id)
@@ -91,6 +94,26 @@ export default {
   border-bottom: 1px solid #efefef;
   .cart-title-text {
     margin-left: 10px;
+  }
+}
+.cart-container {
+  padding-bottom: 50px;
+}
+.empty-cart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 150px;
+
+  .empty-img {
+    width: 90px;
+    height: 90px;
+  }
+
+  .tip-text {
+    font-size: 12px;
+    color: gray;
+    margin-top: 15px;
   }
 }
 </style>
